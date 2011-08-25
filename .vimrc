@@ -36,10 +36,48 @@ autocmd BufNewFile	*.spec	call SKEL_spec()
 filetype plugin on
 filetype indent on
 " ~/.vimrc ends here
-set background=dark
 
 " Settings for VimClojure
 " let g:clj_highlight_builtins=1      " Highlight Clojure's builtins
 let vimclojure#HighlightBuiltins=1
 " let g:clj_paren_rainbow=1           " Rainbow parentheses'!
 let vimclojure#ParenRainbow=1
+
+
+set ts=4
+set nu
+set t_Co=256
+colorscheme inkpot
+"set mouse=a
+set listchars=tab:>-,trail:~,extends:>,precedes:<
+set list
+syntax on
+set nocp
+autocmd FileType python set omnifunc=pythoncomplete#Complete
+autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
+autocmd FileType css set omnifunc=csscomplete#CompleteCSS
+autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags
+autocmd FileType php set omnifunc=phpcomplete#CompletePHP
+autocmd FileType c set omnifunc=ccomplete#Complete
+"autocmd FileType c++ set omnifunc=omni#cpp#complete#Main
+au BufNewFile,BufRead,BufEnter *.cpp,*.hpp set omnifunc=omni#cpp#complete#Main
+" configure tags
+set tags+=~/.vim/tags/cpp
+
+" build current project tags
+map <C-F12> :!tags -R --sort=yes --c++-kinds=+pl --fields=+iaS --extra=+q .<CR>
+
+" Omni settings
+let OmniCpp_NamespaceSearch = 1
+let OmniCpp_PlobalScopeSearch = 1
+let OmniCpp_ShowAccess = 1
+let OmniCpp_ShowPrototypeInAbbr = 1 "shows parameters
+let OmniCpp_MayCompleteDot = 1 "complete after .
+let OmniCpp_MayCompleteArrow = 1 "complete after ->
+let OmniCpp_MayCompleteScope = 1 "complete after ::
+let OmniCpp_DefaultNamespaces = ["std", "_GLIBCXX_STD"]
+
+"automatically open/close completion pop-ups
+au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
+set completeopt=menuone,menu,longest,preview
