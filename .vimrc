@@ -81,3 +81,9 @@ let OmniCpp_DefaultNamespaces = ["std", "_GLIBCXX_STD"]
 "automatically open/close completion pop-ups
 au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
 set completeopt=menuone,menu,longest,preview
+
+" tabbing settings based on filetype
+autocmd FileType python set expandtab
+autocmd FileType python set shiftwidth=4
+autocmd FileType ruby set expandtab
+autocmd FileType ruby set tabstop=2
