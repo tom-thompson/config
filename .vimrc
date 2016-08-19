@@ -1,97 +1,174 @@
-"""" ~/.vimrc (configuration file for vim only)
-"""" skeletons
-"""function! SKEL_spec()
-"""	0r /usr/share/vim/current/skeletons/skeleton.spec
-"""	language time en_US
-"""	if $USER != ''
-"""		let login = $USER
-"""	elseif $LOGNAME != ''
-"""		let login = $LOGNAME
-"""	else
-"""		let login = 'unknown'
-"""	endif
-"""	let newline = stridx(login, "\n")
-"""	if newline != -1
-"""		let login = strpart(login, 0, newline)
-"""	endif
-"""	if $HOSTNAME != ''
-"""		let hostname = $HOSTNAME
-"""	else
-"""		let hostname = system('hostname -f')
-"""		if v:shell_error
-"""		let hostname = 'localhost'
-"""		endif
-"""	endif
-"""	let newline = stridx(hostname, "\n")
-"""	if newline != -1
-"""		let hostname = strpart(hostname, 0, newline)
-"""	endif
-"""	exe "%s/specRPM_CREATION_DATE/" . strftime("%a\ %b\ %d\ %Y") . "/ge"
-"""	exe "%s/specRPM_CREATION_AUTHOR_MAIL/" . login . "@" . hostname . "/ge"
-"""	exe "%s/specRPM_CREATION_NAME/" . expand("%:t:r") . "/ge"
-"""	setf spec
-"""endfunction
-"""autocmd BufNewFile	*.spec	call SKEL_spec()
-"""" filetypes
-"""filetype plugin on
-"""filetype indent on
-"""" ~/.vimrc ends here
-
-set shell=/bin/bash
-
-set completeopt=menuone,menu,longest,preview
-
-set nocompatible
-filetype off
-
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
-Bundle 'gmarik/vundle'
-Bundle 'Valloric/YouCompleteMe'
-Bundle 'scrooloose/syntastic'
-Bundle 'nanotech/jellybeans.vim'
-"Bundle 'kien/rainbow_parentheses.vim'
-"Bundle 'VimIRC'
-
-filetype on
-
-let g:ycm_min_num_of_chars_for_completion = 1
-let g:syntastic_always_populate_loc_list = 1
-let g:ycm_register_as_syntastic_checker = 0
-let g:syntastic_cpp_checkers = ['ycm', 'cpplint']
-let g:syntastic_c_pcheckers = ['ycm', 'cpplint']
-let g:syntastic_objc_pcheckers = ['ycm']
-let g:syntastic_objcpp_checkers = ['ycm']
-let g:syntastic_cpp_cpplint_thres = 0
+syntax on
+filetype plugin indent on
 
 set nu
-set t_Co=256
-set listchars=tab:\\_,trail:~,extends:>,precedes:<
 set list
-syntax on
-colorscheme jellybeans
+set ruler
 
-"""" tabbing settings based on filetype
-"""set shiftwidth=4
-"""autocmd FileType python set expandtab
-"""autocmd FileType python set shiftwidth=4
-"""autocmd FileType ruby set expandtab
-"""autocmd FileType ruby set tabstop=2
-"""autocmd FileType ruby set shiftwidth=2
-"""autocmd Filetype lua set shiftwidth=4
-"""autocmd Filetype lua set tabstop=4
-autocmd FileType cpp set expandtab
+set listchars=tab:\\_,trail:~,extends:>,precedes:<,nbsp:`
+if &encoding == "utf-8"
+	set listchars=tab:\\_,trail:·,extends:>,precedes:<,nbsp:∆
+endif
+
+if &diff
+	let g:pathogen_disabled = ['omnisharp-vim', 'syntastic', 'YouCompleteMe']
+	execute pathogen#infect()
+else
+	execute pathogen#infect()
+
+	set statusline+=%#warningmsg#
+	set statusline+=%{SyntasticStatuslineFlag()}
+	set statusline+=%*
+	
+	let g:syntastic_always_populate_loc_list = 0
+	let g:syntastic_auto_loc_list = 0
+	let g:syntastic_check_on_open = 1
+	let g:syntastic_check_on_wq = 0
+	
+	let g:OmniSharp_selector_ui = 'ctrlp'
+	"
+	" OmniSharp won't work without this setting
+	filetype plugin on
+	
+	"This is the default value, setting it isn't actually necessary
+	let g:OmniSharp_host = "http://localhost:2000"
+	
+	"Set the type lookup function to use the preview window instead of the status line
+	"let g:OmniSharp_typeLookupInPreview = 1
+	
+	"Timeout in seconds to wait for a response from the server
+	let g:OmniSharp_timeout = 1
+	
+	"Showmatch significantly slows down omnicomplete
+	"when the first match contains parentheses.
+	set noshowmatch
+	
+	"Super tab settings - uncomment the next 4 lines
+	"let g:SuperTabDefaultCompletionType = 'context'
+	"let g:SuperTabContextDefaultCompletionType = "<c-x><c-o>"
+	"let g:SuperTabDefaultCompletionTypeDiscovery = ["&omnifunc:<c-x><c-o>","&completefunc:<c-x><c-n>"]
+	"let g:SuperTabClosePreviewOnPopupClose = 1
+	
+	"don't autoselect first item in omnicomplete, show if only one item (for preview)
+	"remove preview if you don't want to see any documentation whatsoever.
+	set completeopt=longest,menuone,preview
+	" Fetch full documentation during omnicomplete requests.
+	" There is a performance penalty with this (especially on Mono)
+	" By default, only Type/Method signatures are fetched. Full documentation can still be fetched when
+	" you need it with the :OmniSharpDocumentation command.
+	" let g:omnicomplete_fetch_documentation=1
+	
+	"Move the preview window (code documentation) to the bottom of the screen, so it doesn't move the code!
+	"You might also want to look at the echodoc plugin
+	set splitbelow
+	
+	" Get Code Issues and syntax errors
+	let g:syntastic_cs_checkers = ['syntax', 'semantic', 'issues']
+	" If you are using the omnisharp-roslyn backend, use the following
+	" let g:syntastic_cs_checkers = ['code_checker']
+	augroup omnisharp_commands
+	    autocmd!
+	
+	    "Set autocomplete function to OmniSharp (if not using YouCompleteMe completion plugin)
+	    autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
+	
+	    " Synchronous build (blocks Vim)
+	    "autocmd FileType cs nnoremap <F5> :wa!<cr>:OmniSharpBuild<cr>
+	    " Builds can also run asynchronously with vim-dispatch installed
+	    autocmd FileType cs nnoremap <leader>b :wa!<cr>:OmniSharpBuildAsync<cr>
+	    " automatic syntax check on events (TextChanged requires Vim 7.4)
+	    autocmd BufEnter,TextChanged,InsertLeave *.cs SyntasticCheck
+	
+	    " Automatically add new cs files to the nearest project on save
+	    autocmd BufWritePost *.cs call OmniSharp#AddToProject()
+	
+	    "show type information automatically when the cursor stops moving
+	    autocmd CursorHold *.cs call OmniSharp#TypeLookupWithoutDocumentation()
+	
+	    "The following commands are contextual, based on the current cursor position.
+	
+	    autocmd FileType cs nnoremap gd :OmniSharpGotoDefinition<cr>
+	    autocmd FileType cs nnoremap <leader>fi :OmniSharpFindImplementations<cr>
+	    autocmd FileType cs nnoremap <leader>ft :OmniSharpFindType<cr>
+	    autocmd FileType cs nnoremap <leader>fs :OmniSharpFindSymbol<cr>
+	    autocmd FileType cs nnoremap <leader>fu :OmniSharpFindUsages<cr>
+	    "finds members in the current buffer
+	    autocmd FileType cs nnoremap <leader>fm :OmniSharpFindMembers<cr>
+	    " cursor can be anywhere on the line containing an issue
+	    autocmd FileType cs nnoremap <leader>x  :OmniSharpFixIssue<cr>
+	    autocmd FileType cs nnoremap <leader>fx :OmniSharpFixUsings<cr>
+	    autocmd FileType cs nnoremap <leader>tt :OmniSharpTypeLookup<cr>
+	    autocmd FileType cs nnoremap <leader>dc :OmniSharpDocumentation<cr>
+	    "navigate up by method/property/field
+	    autocmd FileType cs nnoremap <C-K> :OmniSharpNavigateUp<cr>
+	    "navigate down by method/property/field
+	    autocmd FileType cs nnoremap <C-J> :OmniSharpNavigateDown<cr>
+	
+	augroup END
+endif
+
+
+" this setting controls how long to wait (in ms) before fetching type / symbol information.
+set updatetime=500
+" Remove 'Press Enter to continue' message when type information is longer than one line.
+set cmdheight=2
+
+" Contextual code actions (requires CtrlP or unite.vim)
+nnoremap <leader><space> :OmniSharpGetCodeActions<cr>
+" Run code actions with text selected in visual mode to extract method
+vnoremap <leader><space> :call OmniSharp#GetCodeActions('visual')<cr>
+
+" rename with dialog
+nnoremap <leader>nm :OmniSharpRename<cr>
+nnoremap <F2> :OmniSharpRename<cr>
+" rename without dialog - with cursor on the symbol to rename... ':Rename newname'
+command! -nargs=1 Rename :call OmniSharp#RenameTo("<args>")
+
+" Force OmniSharp to reload the solution. Useful when switching branches etc.
+nnoremap <leader>rl :OmniSharpReloadSolution<cr>
+nnoremap <leader>cf :OmniSharpCodeFormat<cr>
+" Load the current .cs file to the nearest project
+nnoremap <leader>tp :OmniSharpAddToProject<cr>
+
+" (Experimental - uses vim-dispatch or vimproc plugin) - Start the omnisharp server for the current solution
+nnoremap <leader>ss :OmniSharpStartServer<cr>
+nnoremap <leader>sp :OmniSharpStopServer<cr>
+
+" Add syntax highlighting for types and interfaces
+nnoremap <leader>th :OmniSharpHighlightTypes<cr>
+"Don't ask to save when changing buffers (i.e. when jumping to a type definition)
+set hidden
+
+" Enable snippet completion, requires completeopt-=preview
+let g:OmniSharp_want_snippet=0
+
+" Testing
+nnoremap <leader>rt :OmniSharpRunTests<cr>
+nnoremap <leader>ra :OmniSharpRunAllTests<cr>
+
+colorscheme deep-space
+
+autocmd FileType cs set ts=2
+autocmd FileType cs set sw=2
+autocmd FileType cs set expandtab
+
+autocmd FileType python set ts=4
+autocmd FileType python set sw=4
+autocmd FileType python set expandtab
+
 autocmd FileType cpp set ts=2
 autocmd FileType cpp set sw=2
+autocmd FileType cpp set expandtab
 
-"au VimEnter * RainbowParenthesesToggle
-"au Syntax * RainbowParenthesesLoadRound
-"au Syntax * RainbowParenthesesLoadSquare
-"au Syntax * RainbowParenthesesLoadBraces
-"au Syntax * RainbowParenthesesLoadChevrons
+nnoremap <leader>sc :lclose<cr>
+nnoremap <leader>so :Errors<cr>
 
-filetype indent on
-set autochdir
+" eclim for error tray in java
+autocmd FileType java nnoremap <leader>sc :cclose<cr>
+autocmd FileType java nnoremap <leader>so :ProjectProblems<cr>
+autocmd FileType java nnoremap <leader>b :wa!<cr>:ProjectBuild<cr>
 
-let g:ycm_autoclose_preview_window_after_insertion = 1
-let g:ycm_extra_conf_globlist = ['~/dev/*', '!~/*']
+let g:EclimCompletionMethod = 'omnifunc'
+
+nnoremap <leader>n :Bsnext<CR>
+nnoremap <leader>N :Bsprev<CR>
