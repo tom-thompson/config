@@ -147,6 +147,12 @@ nnoremap <leader>rt :OmniSharpRunTests<cr>
 nnoremap <leader>ra :OmniSharpRunAllTests<cr>
 
 colorscheme deep-space
+if has("gui_running")
+  colorscheme compot
+endif
+
+set go-=r
+set go-=L
 
 autocmd FileType cs set ts=2
 autocmd FileType cs set sw=2
@@ -172,3 +178,7 @@ let g:EclimCompletionMethod = 'omnifunc'
 
 nnoremap <leader>n :Bsnext<CR>
 nnoremap <leader>N :Bsprev<CR>
+
+set previewheight=50
+let g:ycm_autoclose_preview_window_after_insertion = 1
+
