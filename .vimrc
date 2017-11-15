@@ -1,3 +1,7 @@
+let g:ycm_global_ycm_extra_conf = '~/.config/nvim/.ycm_extra_conf.py'
+let g:python_host_prog = '/usr/bin/python2.7'
+let g:python3_host_prog = '/usr/local/bin/python3'
+
 syntax on
 filetype plugin indent on
 
@@ -10,23 +14,52 @@ if &encoding == "utf-8"
 	set listchars=tab:\\_,trail:·,extends:>,precedes:<,nbsp:∆
 endif
 
-if &diff
-	let g:pathogen_disabled = ['omnisharp-vim', 'syntastic', 'YouCompleteMe']
-	execute pathogen#infect()
-else
-	execute pathogen#infect()
+call plug#begin()
+Plug 'vim-erlang/vim-compot'
+Plug 'vim-erlang/vim-erlang-omnicomplete'
+Plug 'vim-erlang/vim-erlang-runtime'
+Plug 'vim-erlang/vim-erlang-skeletons'
+Plug 'vim-erlang/vim-erlang-compiler'
+"Plug 'vim-erlang/erlang-motions'
+Plug 'vim-erlang/vim-dialyzer'
 
+Plug 'vim-syntastic/syntastic'
+Plug 'OmniSharp/omnisharp-vim'
+Plug 'Valloric/YouCompleteMe'
+
+Plug 'tpope/vim-dispatch'
+Plug 'ctrlpvim/ctrlp.vim'
+
+Plug 'morhetz/gruvbox'
+Plug 'vim-airline/vim-airline'
+
+Plug 'nfvs/vim-perforce'
+call plug#end()
+
+set termguicolors
+colorscheme compot
+colorscheme gruvbox
+
+"if &diff
+""	let g:pathogen_disabled = ['omnisharp-vim', 'syntastic', 'YouCompleteMe']
+""	execute pathogen#infect()
+"else
+""	execute pathogen#infect()
+"
 	set statusline+=%#warningmsg#
 	set statusline+=%{SyntasticStatuslineFlag()}
 	set statusline+=%*
 	
-	let g:syntastic_always_populate_loc_list = 0
-	let g:syntastic_auto_loc_list = 0
+	let g:syntastic_always_populate_loc_list = 1
+	let g:syntastic_auto_loc_list = 1
 	let g:syntastic_check_on_open = 1
 	let g:syntastic_check_on_wq = 0
-	
+
+	let g:syntastic_error_symbol= '∇'
+	let g:syntastic_warning_symbol = '∆'
+
 	let g:OmniSharp_selector_ui = 'ctrlp'
-	"
+
 	" OmniSharp won't work without this setting
 	filetype plugin on
 	
@@ -41,7 +74,7 @@ else
 	
 	"Showmatch significantly slows down omnicomplete
 	"when the first match contains parentheses.
-	set noshowmatch
+"	set noshowmatch
 	
 	"Super tab settings - uncomment the next 4 lines
 	"let g:SuperTabDefaultCompletionType = 'context'
@@ -105,7 +138,7 @@ else
 	    autocmd FileType cs nnoremap <C-J> :OmniSharpNavigateDown<cr>
 	
 	augroup END
-endif
+"endif
 
 
 " this setting controls how long to wait (in ms) before fetching type / symbol information.
@@ -146,14 +179,19 @@ let g:OmniSharp_want_snippet=0
 nnoremap <leader>rt :OmniSharpRunTests<cr>
 nnoremap <leader>ra :OmniSharpRunAllTests<cr>
 
-colorscheme deep-space
-if has("gui_running")
-  colorscheme compot
-endif
-
-set go-=r
-set go-=L
-
+""colorscheme deep-space
+""if has(termguicolors)
+"  set termguicolors
+""  colorscheme compot
+""endif
+"
+"if has("gui_running")
+""  colorscheme compot
+"endif
+"
+"set go-=r
+"set go-=L
+"
 autocmd FileType cs set ts=2
 autocmd FileType cs set sw=2
 autocmd FileType cs set expandtab
@@ -170,15 +208,20 @@ nnoremap <leader>sc :lclose<cr>
 nnoremap <leader>so :Errors<cr>
 
 " eclim for error tray in java
-autocmd FileType java nnoremap <leader>sc :cclose<cr>
-autocmd FileType java nnoremap <leader>so :ProjectProblems<cr>
-autocmd FileType java nnoremap <leader>b :wa!<cr>:ProjectBuild<cr>
-
-let g:EclimCompletionMethod = 'omnifunc'
-
-nnoremap <leader>n :Bsnext<CR>
-nnoremap <leader>N :Bsprev<CR>
-
+"autocmd FileType java nnoremap <leader>sc :cclose<cr>
+"autocmd FileType java nnoremap <leader>so :ProjectProblems<cr>
+"autocmd FileType java nnoremap <leader>b :wa!<cr>:ProjectBuild<cr>
+"
+"let g:EclimCompletionMethod = 'omnifunc'
+"
+"nnoremap <leader>n :Bsnext<CR>
+"nnoremap <leader>N :Bsprev<CR>
+"
 set previewheight=50
 let g:ycm_autoclose_preview_window_after_insertion = 1
 
+hi Todo guifg=#222222
+
+
+let g:perforce_auto_source_dirs = ['/Users/TomThompson/dev/ronin']
+let g:perforce_use_relative_paths = 1
