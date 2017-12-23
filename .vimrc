@@ -31,11 +31,17 @@ Plug 'tpope/vim-dispatch'
 Plug 'ctrlpvim/ctrlp.vim'
 
 Plug 'morhetz/gruvbox'
+
+Plug 'vim-airline/vim-airline'
+Plug 'jacoborus/tender'
+
 call plug#end()
 
 set termguicolors
-colorscheme compot
-colorscheme gruvbox
+set bg=dark
+"colorscheme compot
+"colorscheme gruvbox
+colorscheme tender
 
 "if &diff
 ""	let g:pathogen_disabled = ['omnisharp-vim', 'syntastic', 'YouCompleteMe']
@@ -217,4 +223,4 @@ nnoremap <leader>so :Errors<cr>
 set previewheight=50
 let g:ycm_autoclose_preview_window_after_insertion = 1
 
-hi Todo guifg=#222222
+"hi Todo guifg=#222222
