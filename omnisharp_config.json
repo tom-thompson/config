@@ -26,12 +26,17 @@
   ],*/
 
   "IgnoredCodeIssues": [
+    "^Redundant lambda signature parentheses$",
+    "^Parameter can be IComparable$",
+    "^Convert to constant$",
+    "^Convert to '??' expression$",
+    "^Redundant argument name specification$",
+    "^Static method invoked via derived type$",
+    "^Use 'var' keyword$",
+    "^Name should have prefix '_'.*",
+    "^Initializing field by default value is redundant$",
     "^Keyword 'private' is redundant. This is the default modifier.$",
-    ".* should not separate words with an underscore.*",
-    "Static method invoked via derived type",
-    "The private field .* is never assigned",
-    "Redundant lambda signature parentheses",
-    "Initializing field by default value is redundant"
+    ".* should not separate words with an underscore.*"
   ],
 
   "TestCommands": {

@@ -2,12 +2,16 @@ let g:ycm_global_ycm_extra_conf = '~/.config/nvim/.ycm_extra_conf.py'
 let g:python_host_prog = '/usr/bin/python2.7'
 let g:python3_host_prog = '/usr/local/bin/python3'
 
+set diffopt=filler,context:4,iwhite,vertical
+
 syntax on
 filetype plugin indent on
 
 set nu
 set list
 set ruler
+
+"set mouse=a
 
 set listchars=tab:\\_,trail:~,extends:>,precedes:<,nbsp:`
 if &encoding == "utf-8"
@@ -31,14 +35,16 @@ Plug 'tpope/vim-dispatch'
 Plug 'ctrlpvim/ctrlp.vim'
 
 Plug 'morhetz/gruvbox'
+Plug 'jacoborus/tender'
 Plug 'vim-airline/vim-airline'
 
 Plug 'nfvs/vim-perforce'
 call plug#end()
 
 set termguicolors
-colorscheme compot
-colorscheme gruvbox
+"colorscheme compot
+"colorscheme gruvbox
+colorscheme tender
 
 "if &diff
 ""	let g:pathogen_disabled = ['omnisharp-vim', 'syntastic', 'YouCompleteMe']
@@ -55,8 +61,8 @@ colorscheme gruvbox
 	let g:syntastic_check_on_open = 1
 	let g:syntastic_check_on_wq = 0
 
-	let g:syntastic_error_symbol= '∇'
-	let g:syntastic_warning_symbol = '∆'
+	let g:syntastic_error_symbol= 'X'
+	let g:syntastic_warning_symbol = '-'
 
 	let g:OmniSharp_selector_ui = 'ctrlp'
 
@@ -65,6 +71,9 @@ colorscheme gruvbox
 	
 	"This is the default value, setting it isn't actually necessary
 	let g:OmniSharp_host = "http://localhost:2000"
+
+	let g:OmniSharp_server_use_mono = 1
+"	let g:OmniSharp_server_path = '/Users/TomTompson/omnisharp-osx/omnisharp/OmniSharp.exe'
 	
 	"Set the type lookup function to use the preview window instead of the status line
 	"let g:OmniSharp_typeLookupInPreview = 1
@@ -96,7 +105,10 @@ colorscheme gruvbox
 	set splitbelow
 	
 	" Get Code Issues and syntax errors
-	let g:syntastic_cs_checkers = ['syntax', 'semantic', 'issues']
+"	let g:syntastic_cs_checkers = ['code_checker', 'issues', 'mcs', 'semantic', 'syntax']
+"	let g:syntastic_cs_checkers = [ 'issues',  'semantic', 'syntax']
+	let g:syntastic_cs_checkers = ['code_checker']
+
 	" If you are using the omnisharp-roslyn backend, use the following
 	" let g:syntastic_cs_checkers = ['code_checker']
 	augroup omnisharp_commands
@@ -225,3 +237,36 @@ hi Todo guifg=#222222
 
 let g:perforce_auto_source_dirs = ['/Users/TomThompson/dev/ronin']
 let g:perforce_use_relative_paths = 1
+
+
+function! DiffCL()
+	function! DiffEditLine(line)
+		execute "tabnew"
+		execute "read !p4 print " + a:line
+	endfunction
+
+	let @c = "read !p4 describe -s "
+	let @c .= join(readfile("/Users/TomTompson/.last_review"), "\n")
+	let @c .= "|grep '^\.\.\.'|grep '\.cs'|grep -v '\.cs\.meta'|grep -v 'add$'"
+
+	execute "tabnew"
+	execute @c
+"	execute "1,$ s/^.*ronin_dev.//g"
+"	execute "norm ggdd"
+"	execute "1,$ s/ edit//g"
+"	execute "1,$ g/#/norm Ip4 print "
+"	execute "1,$ g/#/norm f#i\\"
+endfunction
+
+
+autocmd BufRead,BufNewFile *.cs#* setfiletype cs
+
+function! KillTab()
+	try
+		exe ':tabclose'
+	catch
+		exe ':qa!'
+	endtry
+endfunction
+nmap <c-q> :call KillTab()<cr>
+
