@@ -35,13 +35,15 @@ Plug 'morhetz/gruvbox'
 Plug 'vim-airline/vim-airline'
 Plug 'jacoborus/tender'
 
+Plug 'vimwiki/vimwiki'
+
 call plug#end()
 
 set termguicolors
 set bg=dark
 "colorscheme compot
-"colorscheme gruvbox
-colorscheme tender
+colorscheme gruvbox
+"colorscheme tender
 
 "if &diff
 ""	let g:pathogen_disabled = ['omnisharp-vim', 'syntastic', 'YouCompleteMe']
@@ -207,6 +209,10 @@ autocmd FileType cpp set ts=2
 autocmd FileType cpp set sw=2
 autocmd FileType cpp set expandtab
 
+autocmd FileType c set ts=2
+autocmd FileType c set sw=2
+autocmd FileType c set expandtab
+
 nnoremap <leader>sc :lclose<cr>
 nnoremap <leader>so :Errors<cr>
 
@@ -224,3 +230,5 @@ set previewheight=50
 let g:ycm_autoclose_preview_window_after_insertion = 1
 
 "hi Todo guifg=#222222
+
+let g:vimwiki_list = [{'path': '~/vimwiki/', 'syntax': 'markdown', 'ext': '.md'}]
