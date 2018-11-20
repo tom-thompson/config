@@ -28,6 +28,7 @@
   "IgnoredCodeIssues": [
     "^Redundant lambda signature parentheses$",
     "^Parameter can be IComparable$",
+    "^Parameter can be IEquatable$",
     "^Convert to constant$",
     "^Convert to '??' expression$",
     "^Redundant argument name specification$",

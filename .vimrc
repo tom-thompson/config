@@ -39,6 +39,9 @@ Plug 'jacoborus/tender'
 Plug 'vim-airline/vim-airline'
 
 Plug 'nfvs/vim-perforce'
+
+Plug 'vimwiki/vimwiki', {'branch': 'dev'}
+
 call plug#end()
 
 set termguicolors
@@ -68,12 +71,16 @@ colorscheme tender
 
 	" OmniSharp won't work without this setting
 	filetype plugin on
-	
+
+	let g:OmniSharp_server_path = '/Users/TomTompson/.config/nvim/plugged/omnisharp-vim/server/OmniSharp/bin/Debug/OmniSharp.exe'
+
 	"This is the default value, setting it isn't actually necessary
 	let g:OmniSharp_host = "http://localhost:2000"
 
 	let g:OmniSharp_server_use_mono = 1
 "	let g:OmniSharp_server_path = '/Users/TomTompson/omnisharp-osx/omnisharp/OmniSharp.exe'
+
+"	let g:OmniSharp_sln_ports = {'/Users/TomTompson/dev/ronin/ronin_dev/ronin_dev.sln': 2000}
 	
 	"Set the type lookup function to use the preview window instead of the status line
 	"let g:OmniSharp_typeLookupInPreview = 1
@@ -86,10 +93,10 @@ colorscheme tender
 "	set noshowmatch
 	
 	"Super tab settings - uncomment the next 4 lines
-	"let g:SuperTabDefaultCompletionType = 'context'
-	"let g:SuperTabContextDefaultCompletionType = "<c-x><c-o>"
-	"let g:SuperTabDefaultCompletionTypeDiscovery = ["&omnifunc:<c-x><c-o>","&completefunc:<c-x><c-n>"]
-	"let g:SuperTabClosePreviewOnPopupClose = 1
+"	let g:SuperTabDefaultCompletionType = 'context'
+"	let g:SuperTabContextDefaultCompletionType = "<c-x><c-o>"
+"	let g:SuperTabDefaultCompletionTypeDiscovery = ["&omnifunc:<c-x><c-o>","&completefunc:<c-x><c-n>"]
+"	let g:SuperTabClosePreviewOnPopupClose = 1
 	
 	"don't autoselect first item in omnicomplete, show if only one item (for preview)
 	"remove preview if you don't want to see any documentation whatsoever.
@@ -98,7 +105,7 @@ colorscheme tender
 	" There is a performance penalty with this (especially on Mono)
 	" By default, only Type/Method signatures are fetched. Full documentation can still be fetched when
 	" you need it with the :OmniSharpDocumentation command.
-	" let g:omnicomplete_fetch_documentation=1
+	 let g:omnicomplete_fetch_documentation=1
 	
 	"Move the preview window (code documentation) to the bottom of the screen, so it doesn't move the code!
 	"You might also want to look at the echodoc plugin
@@ -269,4 +276,6 @@ function! KillTab()
 	endtry
 endfunction
 nmap <c-q> :call KillTab()<cr>
+
+let g:vimwiki_list = [ {'syntax': 'markdown', 'ext': '.md'}, {'path': '~/.jira_wiki/', 'syntax': 'asciidoc', 'ext': '.md'} ]
 
