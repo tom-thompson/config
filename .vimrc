@@ -27,7 +27,7 @@ Plug 'vim-erlang/vim-erlang-compiler'
 "Plug 'vim-erlang/erlang-motions'
 Plug 'vim-erlang/vim-dialyzer'
 
-Plug 'vim-syntastic/syntastic'
+"Plug 'vim-syntastic/syntastic'
 Plug 'OmniSharp/omnisharp-vim'
 Plug 'Valloric/YouCompleteMe'
 
@@ -41,6 +41,7 @@ Plug 'vim-airline/vim-airline'
 Plug 'nfvs/vim-perforce'
 
 Plug 'vimwiki/vimwiki', {'branch': 'dev'}
+Plug 'w0rp/ale'
 
 call plug#end()
 
@@ -56,29 +57,28 @@ colorscheme tender
 ""	execute pathogen#infect()
 "
 	set statusline+=%#warningmsg#
-	set statusline+=%{SyntasticStatuslineFlag()}
+"	set statusline+=%{SyntasticStatuslineFlag()}
 	set statusline+=%*
 	
-	let g:syntastic_always_populate_loc_list = 1
-	let g:syntastic_auto_loc_list = 1
-	let g:syntastic_check_on_open = 1
-	let g:syntastic_check_on_wq = 0
+"	let g:syntastic_always_populate_loc_list = 1
+"	let g:syntastic_auto_loc_list = 1
+"	let g:syntastic_check_on_open = 1
+"	let g:syntastic_check_on_wq = 0
 
-	let g:syntastic_error_symbol= 'X'
-	let g:syntastic_warning_symbol = '-'
+"	let g:syntastic_error_symbol= 'X'
+"	let g:syntastic_warning_symbol = '-'
 
 	let g:OmniSharp_selector_ui = 'ctrlp'
 
 	" OmniSharp won't work without this setting
 	filetype plugin on
 
-	let g:OmniSharp_server_path = '/Users/TomTompson/.config/nvim/plugged/omnisharp-vim/server/OmniSharp/bin/Debug/OmniSharp.exe'
 
 	"This is the default value, setting it isn't actually necessary
-	let g:OmniSharp_host = "http://localhost:2000"
+"	let g:OmniSharp_host = "http://localhost:2000"
+	let g:OmniSharp_port = 2000
 
 	let g:OmniSharp_server_use_mono = 1
-"	let g:OmniSharp_server_path = '/Users/TomTompson/omnisharp-osx/omnisharp/OmniSharp.exe'
 
 "	let g:OmniSharp_sln_ports = {'/Users/TomTompson/dev/ronin/ronin_dev/ronin_dev.sln': 2000}
 	
@@ -114,7 +114,7 @@ colorscheme tender
 	" Get Code Issues and syntax errors
 "	let g:syntastic_cs_checkers = ['code_checker', 'issues', 'mcs', 'semantic', 'syntax']
 "	let g:syntastic_cs_checkers = [ 'issues',  'semantic', 'syntax']
-	let g:syntastic_cs_checkers = ['code_checker']
+"	let g:syntastic_cs_checkers = ['code_checker']
 
 	" If you are using the omnisharp-roslyn backend, use the following
 	" let g:syntastic_cs_checkers = ['code_checker']
@@ -129,13 +129,13 @@ colorscheme tender
 	    " Builds can also run asynchronously with vim-dispatch installed
 	    autocmd FileType cs nnoremap <leader>b :wa!<cr>:OmniSharpBuildAsync<cr>
 	    " automatic syntax check on events (TextChanged requires Vim 7.4)
-	    autocmd BufEnter,TextChanged,InsertLeave *.cs SyntasticCheck
+"	    autocmd BufEnter,TextChanged,InsertLeave *.cs SyntasticCheck
 	
 	    " Automatically add new cs files to the nearest project on save
-	    autocmd BufWritePost *.cs call OmniSharp#AddToProject()
+"	    autocmd BufWritePost *.cs call OmniSharp#AddToProject()
 	
 	    "show type information automatically when the cursor stops moving
-	    autocmd CursorHold *.cs call OmniSharp#TypeLookupWithoutDocumentation()
+"	    autocmd CursorHold *.cs call OmniSharp#TypeLookupWithoutDocumentation()
 	
 	    "The following commands are contextual, based on the current cursor position.
 	
@@ -278,4 +278,6 @@ endfunction
 nmap <c-q> :call KillTab()<cr>
 
 let g:vimwiki_list = [ {'syntax': 'markdown', 'ext': '.md'}, {'path': '~/.jira_wiki/', 'syntax': 'asciidoc', 'ext': '.md'} ]
+
+let g:ale_linters = { 'cs': ['OmniSharp'] }
 
