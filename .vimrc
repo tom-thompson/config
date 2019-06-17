@@ -19,15 +19,7 @@ if &encoding == "utf-8"
 endif
 
 call plug#begin()
-Plug 'vim-erlang/vim-compot'
-Plug 'vim-erlang/vim-erlang-omnicomplete'
-Plug 'vim-erlang/vim-erlang-runtime'
-Plug 'vim-erlang/vim-erlang-skeletons'
-Plug 'vim-erlang/vim-erlang-compiler'
-"Plug 'vim-erlang/erlang-motions'
-Plug 'vim-erlang/vim-dialyzer'
 
-"Plug 'vim-syntastic/syntastic'
 Plug 'OmniSharp/omnisharp-vim'
 Plug 'Valloric/YouCompleteMe'
 
@@ -41,7 +33,10 @@ Plug 'vim-airline/vim-airline'
 Plug 'nfvs/vim-perforce'
 
 Plug 'vimwiki/vimwiki', {'branch': 'dev'}
-Plug 'w0rp/ale'
+
+"Plug 'vim-syntastic/syntastic'
+
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
 call plug#end()
 
@@ -50,35 +45,21 @@ set termguicolors
 "colorscheme gruvbox
 colorscheme tender
 
-"if &diff
-""	let g:pathogen_disabled = ['omnisharp-vim', 'syntastic', 'YouCompleteMe']
-""	execute pathogen#infect()
-"else
-""	execute pathogen#infect()
-"
 	set statusline+=%#warningmsg#
-"	set statusline+=%{SyntasticStatuslineFlag()}
+	set statusline+=%{SyntasticStatuslineFlag()}
 	set statusline+=%*
-	
-"	let g:syntastic_always_populate_loc_list = 1
-"	let g:syntastic_auto_loc_list = 1
-"	let g:syntastic_check_on_open = 1
-"	let g:syntastic_check_on_wq = 0
-
-"	let g:syntastic_error_symbol= 'X'
-"	let g:syntastic_warning_symbol = '-'
 
 	let g:OmniSharp_selector_ui = 'ctrlp'
-
 	" OmniSharp won't work without this setting
 	filetype plugin on
 
 
 	"This is the default value, setting it isn't actually necessary
 "	let g:OmniSharp_host = "http://localhost:2000"
-	let g:OmniSharp_port = 2000
+"	let g:OmniSharp_port = 2000
 
 	let g:OmniSharp_server_use_mono = 1
+	let g:OmniSharp_server_path = '~/.omnisharp/omnisharp-roslyn/OmniSharp.exe'
 
 "	let g:OmniSharp_sln_ports = {'/Users/TomTompson/dev/ronin/ronin_dev/ronin_dev.sln': 2000}
 	
@@ -92,12 +73,6 @@ colorscheme tender
 	"when the first match contains parentheses.
 "	set noshowmatch
 	
-	"Super tab settings - uncomment the next 4 lines
-"	let g:SuperTabDefaultCompletionType = 'context'
-"	let g:SuperTabContextDefaultCompletionType = "<c-x><c-o>"
-"	let g:SuperTabDefaultCompletionTypeDiscovery = ["&omnifunc:<c-x><c-o>","&completefunc:<c-x><c-n>"]
-"	let g:SuperTabClosePreviewOnPopupClose = 1
-	
 	"don't autoselect first item in omnicomplete, show if only one item (for preview)
 	"remove preview if you don't want to see any documentation whatsoever.
 	set completeopt=longest,menuone,preview
@@ -110,14 +85,8 @@ colorscheme tender
 	"Move the preview window (code documentation) to the bottom of the screen, so it doesn't move the code!
 	"You might also want to look at the echodoc plugin
 	set splitbelow
-	
-	" Get Code Issues and syntax errors
-"	let g:syntastic_cs_checkers = ['code_checker', 'issues', 'mcs', 'semantic', 'syntax']
-"	let g:syntastic_cs_checkers = [ 'issues',  'semantic', 'syntax']
-"	let g:syntastic_cs_checkers = ['code_checker']
 
 	" If you are using the omnisharp-roslyn backend, use the following
-	" let g:syntastic_cs_checkers = ['code_checker']
 	augroup omnisharp_commands
 	    autocmd!
 	
@@ -198,19 +167,6 @@ let g:OmniSharp_want_snippet=0
 nnoremap <leader>rt :OmniSharpRunTests<cr>
 nnoremap <leader>ra :OmniSharpRunAllTests<cr>
 
-""colorscheme deep-space
-""if has(termguicolors)
-"  set termguicolors
-""  colorscheme compot
-""endif
-"
-"if has("gui_running")
-""  colorscheme compot
-"endif
-"
-"set go-=r
-"set go-=L
-"
 autocmd FileType cs set ts=2
 autocmd FileType cs set sw=2
 autocmd FileType cs set expandtab
@@ -236,34 +192,35 @@ nnoremap <leader>so :Errors<cr>
 "nnoremap <leader>n :Bsnext<CR>
 "nnoremap <leader>N :Bsprev<CR>
 "
+
 set previewheight=50
 let g:ycm_autoclose_preview_window_after_insertion = 1
 
 hi Todo guifg=#222222
 
 
-let g:perforce_auto_source_dirs = ['/Users/TomThompson/dev/ronin']
+let g:perforce_auto_source_dirs = ['/Users/TomThompson/p4/ronin']
 let g:perforce_use_relative_paths = 1
 
 
-function! DiffCL()
-	function! DiffEditLine(line)
-		execute "tabnew"
-		execute "read !p4 print " + a:line
-	endfunction
-
-	let @c = "read !p4 describe -s "
-	let @c .= join(readfile("/Users/TomTompson/.last_review"), "\n")
-	let @c .= "|grep '^\.\.\.'|grep '\.cs'|grep -v '\.cs\.meta'|grep -v 'add$'"
-
-	execute "tabnew"
-	execute @c
-"	execute "1,$ s/^.*ronin_dev.//g"
-"	execute "norm ggdd"
-"	execute "1,$ s/ edit//g"
-"	execute "1,$ g/#/norm Ip4 print "
-"	execute "1,$ g/#/norm f#i\\"
-endfunction
+"function! DiffCL()
+"	function! DiffEditLine(line)
+"		execute "tabnew"
+"		execute "read !p4 print " + a:line
+"	endfunction
+"
+"	let @c = "read !p4 describe -s "
+"	let @c .= join(readfile("/Users/TomTompson/.last_review"), "\n")
+"	let @c .= "|grep '^\.\.\.'|grep '\.cs'|grep -v '\.cs\.meta'|grep -v 'add$'"
+"
+"	execute "tabnew"
+"	execute @c
+""	execute "1,$ s/^.*ronin_dev.//g"
+""	execute "norm ggdd"
+""	execute "1,$ s/ edit//g"
+""	execute "1,$ g/#/norm Ip4 print "
+""	execute "1,$ g/#/norm f#i\\"
+"endfunction
 
 
 autocmd BufRead,BufNewFile *.cs#* setfiletype cs
@@ -279,5 +236,4 @@ nmap <c-q> :call KillTab()<cr>
 
 let g:vimwiki_list = [ {'syntax': 'markdown', 'ext': '.md'}, {'path': '~/.jira_wiki/', 'syntax': 'asciidoc', 'ext': '.md'} ]
 
-let g:ale_linters = { 'cs': ['OmniSharp'] }
-
+"let g:go_autodetect_gopath = 1
