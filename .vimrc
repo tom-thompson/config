@@ -31,20 +31,20 @@ Plug 'vim-airline/vim-airline'
 
 Plug 'vimwiki/vimwiki', {'branch': 'dev'}
 
-Plug 'tools-life/taskwiki'
+"Plug 'tools-life/taskwiki'
 Plug 'powerman/vim-plugin-AnsiEsc'
 Plug 'majutsushi/tagbar'
-Plug 'farseer90718/vim-taskwarrior'
+"Plug 'farseer90718/vim-taskwarrior'
 
-if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
+"if has('nvim')
+"  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+"else
+"  Plug 'Shougo/deoplete.nvim'
+"  Plug 'roxma/nvim-yarp'
+"  Plug 'roxma/vim-hug-neovim-rpc'
+"endif
 
-Plug 'beeender/Comrade'
+"Plug 'beeender/Comrade'
 
 "Plug 'sheerun/vim-polyglot'
 
@@ -54,10 +54,10 @@ let g:deoplete#enable_at_startup = 1
 
 set termguicolors
 set background=dark
-let g:forest_night_transparent_background = 1
-let g:airline_theme = 'forest_night'
+let g:everforest_transparent_background = 1
+let g:airline_theme = 'everforest'
 
-colorscheme forest-night
+colorscheme everforest
 
 	set statusline+=%#warningmsg#
 	set statusline+=%*
@@ -151,3 +151,5 @@ let g:vimwiki_global_ext = 0
 let g:markdown_folding = 0
 
 set foldenable!
+
+set backspace=indent,eol,start
